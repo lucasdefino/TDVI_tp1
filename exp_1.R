@@ -32,8 +32,8 @@ run_experiment <- function(datasets_to_pred, filepath) {
 
   # Iterate through different dataset, imputation, and proportion of missing values combinations
   for (dtp in datasets_to_pred) {
-    for (impute in c("Yes", "No")) {
-      for (prop_NAs in c(0, 0.7)) {
+    for (impute in c("Yes","No")) {
+      for (prop_NAs in seq(0.1, 0.9, 0.2)) {
         print(c(dtp$dataset_name, impute, prop_NAs))
 
         # Configure preprocessing options based on imputation choice
@@ -129,13 +129,15 @@ plot_exp_results <- function(filename_exp_results, filename_plot, width, height)
 
 # Load the datasets
 datasets_to_pred <- list(
-  load_df("CO2 Emissions.csv", "CO2", "Impuesto_14.75")
+  load_df("./data/CO2_Emissions_Transformado.csv", "CO2", "CO2.Emissions.g.km"),
+  load_df("./data/heart.csv", "Heart", "HeartDisease"),
+  load_df("./data/customer_churn.csv", "Churn", "churn")
 )
 
 # Run the experiment
 if (RERUN_EXP ==  TRUE) {
-  run_experiment(datasets_to_pred, "./outputs/tables/sample_exp.txt")
+  run_experiment(datasets_to_pred, "./outputs/tables/exp_1.txt")
 }
 
 # Plot the experiment results
-plot_exp_results( "./outputs/tables/sample_exp.txt", "./outputs/plots/sample_exp.jpg", width=5, height=4)
+plot_exp_results( "./outputs/tables/exp_1.txt", "./outputs/plots/exp_1.jpg", width=10, height=4)

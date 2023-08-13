@@ -52,16 +52,16 @@ Se intentará predecir si las emisiones de carbono del automóvil superarán 200
 Decidimos realizar una única transformación al conjunto de datos agregando la columna "Impuesto 14,75" donde 1 indica que el vehiculo califica para el impuesto (CO2 Emissions(g/km) \> 200g/km) y 0 si no.
 
 ```{r}
-df = read.csv('~/Documents/UTDT/ano3_semestre2/TDVI/TP1/CO2 Emissions.csv')
+df = read.csv('./data/CO2_Emissions.csv')
 
 mayores_a_200gkm <- df$CO2.Emissions.g.km > 200
 mayores_a_200gkm <- as.integer(as.logical(mayores_a_200gkm))
 
-df$Impuesto_14.75 <- mayores_a_200gkm
+df$CO2.Emissions.g.km <- mayores_a_200gkm
 ```
 
 ### 5.
 
 ```{r}
-write.csv(df, "~/Documents/UTDT/ano3_semestre2/TDVI/TP1/CO2 Emissions Transformado.csv", row.names=FALSE)
+write.csv(df, "./data/CO2_Emissions_Transformado.csv", row.names=FALSE)
 ```
