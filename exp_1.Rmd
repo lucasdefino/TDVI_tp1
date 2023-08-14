@@ -19,7 +19,7 @@ source("exp_1.R")
 #CARGAMOS LA IMAGEN
 library("jpeg")
 plt <- readJPEG("./outputs/plots/exp_1.jpg",native=TRUE)
-plot(0:1,0:1,type="n",ann=FALSE,axes=FALSE)
+plot(0:0,0:0, type="n",ann=FALSE,axes=FALSE)
 rasterImage(plt,0,0,1,1)
 
 ```

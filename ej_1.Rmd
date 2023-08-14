@@ -9,11 +9,18 @@ output: pdf_document
 
 Los datos se obtuvieron del sitio Kaggle: <https://www.kaggle.com/datasets/bhuviranga/co2-emissions>
 
+```{r}
+#LEVANTAR PRIMERAS FILAS DE LA TABLA
+```
+
 ### 2.
 
-Cantidad de observaciones: 7385
+```{r}
+#Cantidad de observaciones:
 
-Cantidad de variables: 12
+#Cantidad de variables:
+#Muestro las columnas:
+```
 
 > -   Make: fabricante del auto
 
@@ -39,9 +46,11 @@ Cantidad de variables: 12
 
 > -   CO2.Emissions.g.km: emisiones de carbono medido en gramos por kilometro
 
-Tipo de variables: 5 categóricas y 7 numéricas
+```{r}
+#Tipo de variables: 
 
-No se presentan valores faltantes
+#Cantidad de valores faltantes:
+```
 
 ### 3.
 
