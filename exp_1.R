@@ -6,7 +6,7 @@ library(dplyr)    # For data manipulation
 PARALLELIZE <- TRUE # Set the option for parallelization of computations
 N_THREADS <- 30     # Define the number of threads for parallel processing
 N_BINS <- 10        # Define the number of bins for discretization
-RERUN_EXP <- TRUE   # Set the option to rerun the experiment
+RERUN_EXP <- FALSE   # Set the option to rerun the experiment
 
 # Load provided functions
 source("provided_functions.R")
@@ -140,4 +140,4 @@ if (RERUN_EXP ==  TRUE) {
 }
 
 # Plot the experiment results
-plot_exp_results( "./outputs/tables/exp_1.txt", "./outputs/plots/exp_1.jpg", width=10, height=4)
+plot_exp_results( "./outputs/tables/exp_1.txt", "./outputs/plots/exp_1.jpg", width=15, height=8)

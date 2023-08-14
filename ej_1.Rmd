@@ -37,7 +37,7 @@ Cantidad de variables: 12
 
 > -   Fuel Consumption Comb (mpg): consumision de combustible en ciudad y ruta combinados medido en millas por galón
 
-> -   CO2 Emissions(g/km): emisiones de carbono medido en gramos por kilometro
+> -   CO2.Emissions.g.km: emisiones de carbono medido en gramos por kilometro
 
 Tipo de variables: 5 categóricas y 7 numéricas
 
@@ -45,11 +45,11 @@ No se presentan valores faltantes
 
 ### 3.
 
-Se intentará predecir si las emisiones de carbono del automóvil superarán 200g/km, calificando para la mayor tasa de impuestos por emisiones (14,75%) según la normativa española IEDMT (Impuesto Esecial sobre Determinados Medios de Transporte, Artículo 65 de la Ley 38/1992). Elegimos establecer el umbral propuesto por España al ser el país cuya normativa fue más clara. Argentina por el momento no tiene una regulación vigente para vehículos particulares.
+Se intentará predecir si las emisiones de carbono del automóvil superarán 200 g/km, calificando para la mayor tasa de impuestos por emisiones (14,75%) según la normativa española IEDMT (Impuesto Esecial sobre Determinados Medios de Transporte, Artículo 65 de la Ley 38/1992). Elegimos establecer el umbral propuesto por España al ser el país cuya normativa fue más clara. Argentina por el momento no tiene una regulación vigente para vehículos particulares.
 
 ### 4.
 
-Decidimos realizar una única transformación al conjunto de datos agregando la columna "Impuesto 14,75" donde 1 indica que el vehiculo califica para el impuesto (CO2 Emissions(g/km) \> 200g/km) y 0 si no.
+Decidimos realizar una única transformación al conjunto de datos modificando la columna "CO2.Emissions.g.km" donde 1 indica que el vehiculo califica para el impuesto (CO2.Emissions.g.km \> 200 g/km) y 0 si no.
 
 ```{r}
 df = read.csv('./data/CO2_Emissions.csv')
