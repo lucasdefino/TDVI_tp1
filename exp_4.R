@@ -32,54 +32,38 @@ run_experiment <- function(datasets_to_pred, filepath) {
 
   # Iterate through different dataset, imputation, and proportion of missing values combinations
   for (dtp in datasets_to_pred) {
-    for (impute in c("No")) {
-      for (prop_switch_y in seq(0, 0.5, 0.1)) {
-        print(c(dtp$dataset_name, impute, prop_switch_y))
+    for (prop_switch_y in seq(0, 0.5, 0.025)) {
+      print(c(dtp$dataset_name, prop_switch_y))
+      
+      preprocess_control <- list(
+        prop_NAs=0,
+        impute_NAs=FALSE,
+        treat_NAs_as_new_levels=FALSE,
+        do_ohe=FALSE,
+        discretize=FALSE,
+        n_bins=N_BINS,
+        ord_to_numeric=FALSE,
+        prop_switch_y=prop_switch_y
+      )
 
-        # Configure preprocessing options based on imputation choice
-        if (impute == "Yes") {
-          preprocess_control <- list(
-            prop_NAs=0,
-            impute_NAs=TRUE,
-            treat_NAs_as_new_levels=FALSE,
-            do_ohe=FALSE,
-            discretize=FALSE,
-            n_bins=N_BINS,
-            ord_to_numeric=FALSE,
-            prop_switch_y=prop_switch_y
-          )
-        } else if (impute == "No") {
-          preprocess_control <- list(
-            prop_NAs=0,
-            impute_NAs=FALSE,
-            treat_NAs_as_new_levels=FALSE,
-            do_ohe=FALSE,
-            discretize=FALSE,
-            n_bins=N_BINS,
-            ord_to_numeric=FALSE,
-            prop_switch_y=prop_switch_y
-          )
-        }
-
-        # Perform the experiment for the current settings
-        if (PARALLELIZE == TRUE) {
-          res_tmp <- est_auc_across_depths(dtp, preprocess_control,
-                                           max_maxdepth=30, prop_val=0.25,
-                                           val_reps=30)
-        } else {
-          res_tmp <- est_auc_across_depths_no_par(dtp, preprocess_control,
-                                                  max_maxdepth=30, prop_val=0.25,
-                                                  val_reps=30)
-        }
-
-        res_tmp$IMPUTED <- impute
-        res_tmp$prop_switch_y <- prop_switch_y
-        exp_results[[i]] <- res_tmp
-        rm(res_tmp)  # Clean up temporary result
-        i <- i + 1  # Increment result counter
+      # Perform the experiment for the current settings
+      if (PARALLELIZE == TRUE) {
+        res_tmp <- est_auc_across_depths(dtp, preprocess_control,
+                                         max_maxdepth=30, prop_val=0.25,
+                                         val_reps=30)
+      } else {
+        res_tmp <- est_auc_across_depths_no_par(dtp, preprocess_control,
+                                                max_maxdepth=30, prop_val=0.25,
+                                                val_reps=30)
       }
+      
+      res_tmp$prop_switch_y <- prop_switch_y
+      exp_results[[i]] <- res_tmp
+      rm(res_tmp)  # Clean up temporary result
+      i <- i + 1  # Increment result counter
     }
   }
+  
 
   # Combine experiment results into a single data frame
   exp_results <- do.call(rbind, exp_results)
@@ -108,16 +92,17 @@ plot_exp_results <- function(filename_exp_results, filename_plot, width, height)
 
   # Calculate mean AUC values for different groups of experimental results
   data_for_plot <- exp_results %>%
-    group_by(dataset_name, prop_switch_y, IMPUTED, maxdepth) %>%
-    summarize(mean_auc=mean(auc), .groups='drop')
+    group_by(dataset_name, prop_switch_y, maxdepth) %>%
+    summarize(mean_auc=mean(auc), .groups='drop_last') %>%
+    summarize(max_auc=max(mean_auc), .groups='drop')
 
   # Create a ggplot object for the line plot
-  g <- ggplot(data_for_plot, aes(x=maxdepth, y=mean_auc, color=IMPUTED)) +
+  g <- ggplot(data_for_plot, aes(x=prop_switch_y, y=max_auc)) +
     geom_line() +
     theme_bw() +
-    xlab("Maximum tree depth") +
-    ylab("AUC (estimated through repeated validation)") +
-    facet_grid(dataset_name ~ prop_switch_y, scales="free_y") +
+    xlab("Proportion of Y switched") +
+    ylab("max AUC (estimated through repeated validation)") +
+    facet_grid(.~ dataset_name, scales="free_y") +
     theme(legend.position="bottom",
           panel.grid.major=element_blank(),
           strip.background=element_blank(),
@@ -129,9 +114,9 @@ plot_exp_results <- function(filename_exp_results, filename_plot, width, height)
 
 # Load the datasets
 datasets_to_pred <- list(
-  load_df("./data/CO2_Emissions_Transformado.csv", "CO2", "CO2.Emissions.g.km")
-  #load_df("./data/heart.csv", "Heart", "HeartDisease"),
-  #load_df("./data/customer_churn.csv", "Churn", "churn")
+  load_df("./data/CO2_Emissions_Transformado.csv", "CO2", "CO2.Emissions.g.km"),
+  load_df("./data/heart.csv", "Heart", "HeartDisease"),
+  load_df("./data/customer_churn.csv", "Churn", "churn")
 )
 
 # Run the experiment
@@ -139,14 +124,6 @@ if (RERUN_EXP ==  TRUE) {
   run_experiment(datasets_to_pred, "./outputs/tables/exp_4.txt")
 }
 
-# MODIFICAMOS LA TABLA PARA QUE REPORTE EL MAXIMO AUC ALCANZADO PARA CADA UNA DE LAS 30 PROFUNDIDADES
-df <- read.table("./outputs/tables/exp_4.txt")
-
-result <- df %>%
-  group_by(df$maxdepth) %>%
-  summarize(max_AUC = max(df$auc))
-
-write.table(result, "./outputs/tables/exp_4_b.txt", row.names=FALSE)
 
 # Plot the experiment results
 plot_exp_results( "./outputs/tables/exp_4.txt", "./outputs/plots/exp_4.jpg", width=15, height=8)
