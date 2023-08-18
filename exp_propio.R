@@ -133,15 +133,15 @@ plot_exp_results <- function(filename_exp_results, filename_plot, width, height)
 
 # Load the datasets
 datasets_to_pred <- list(
-  load_df("./data/CO2_Emissions_Transformado.csv", "CO2", "CO2.Emissions.g.km"),
-  #load_df("./data/heart.csv", "Heart", "HeartDisease"),
-  load_df("./data/customer_churn.csv", "Churn", "churn")
+  #load_df("./data/CO2_Emissions_Transformado.csv", "CO2", "CO2.Emissions.g.km"),
+  load_df("./data/heart.csv", "Heart", "HeartDisease")
+  #load_df("./data/customer_churn.csv", "Churn", "churn")
 )
 
 # Run the experiment
 if (RERUN_EXP ==  TRUE) {
-  run_experiment(datasets_to_pred, "./outputs/tables/exp_propio.txt")
+  run_experiment(datasets_to_pred, "./outputs/tables/exp_propio2.txt")
 }
 
 # Plot the experiment results
-plot_exp_results( "./outputs/tables/exp_propio.txt", "./outputs/plots/exp_propio.jpg", width=15, height=8)
+plot_exp_results( "./outputs/tables/exp_propio2.txt", "./outputs/plots/exp_propio2.jpg", width=15, height=8)
