@@ -1,9 +1,9 @@
 # Load necessary libraries
 library(rpart)
 library(Metrics)
-library(caret)
+suppressPackageStartupMessages(library(caret))
 library(foreach)
-library(doParallel)
+suppressPackageStartupMessages(library(doParallel))
 
 
 #' Load a data frame from a CSV file.

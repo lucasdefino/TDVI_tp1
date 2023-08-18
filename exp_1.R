@@ -1,6 +1,6 @@
 # Load the necessary libraries for data analysis and visualization
 library(ggplot2)  # For creating plots
-library(dplyr)    # For data manipulation
+suppressPackageStartupMessages(library("dplyr"))  # For data manipulation
 
 # Constants and global variables
 PARALLELIZE <- TRUE # Set the option for parallelization of computations
@@ -125,6 +125,7 @@ plot_exp_results <- function(filename_exp_results, filename_plot, width, height)
 
   # Save the plot to a file
   ggsave(filename_plot, g, width=width, height=height)
+  g
 }
 
 # Load the datasets

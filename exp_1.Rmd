@@ -8,18 +8,72 @@ output:
   pdf_document: default
 ---
 
-Para comenzar nuestro analisis importamos el script y el primer grafico
+## Hipótesis pre-experimentación 
+
+1.  Por la gran cantidad de observaciones en nuestro conjunto de datos sospechamos que las predicciones serán mejores que en los conjuntos Churn y Heart.
+
+    ```{r}
+    #Cantidad de observaciones CO2
+    df = read.csv("./data/CO2_Emissions_Transformado.csv")
+    nrow(df)
+
+    #Cantidad de observaciones Churn
+    df = read.csv("./data/customer_churn.csv")
+    nrow(df)
+
+    #Cantidad de observaciones Heart
+    df = read.csv("./data/heart.csv")
+    nrow(df)
+    ```
+
+2.  A mayor cantidad de NAs peores van a ser las predicciones para los tres conjuntos de datos tanto imputándolos como no.
+
+3.  Según la documentación de rpart el tratamiento para los NAs es descartar la obstervación si el valor faltante pertenece a la variable que se quiere predecir (no descarta si pertenece a otras variables). Por como se generan los NAs en el código de *provided_functions* estimamos que varias observaciones van a ser descartadas dejandonos con una peor prediccion que si los imputáramos.
+
+## Experimentación 
+
+Importamos el script y el gráfico que este realiza:
 
 ```{r}
-#CARGAMOS EL SCRIPT
-source("exp_1.R")
+#Cargamos el script
+#ADVERTENCIA: correr este bloque de codigo hace que se vuelva a correr el experimento
+suppressWarnings(source("exp_1.R"))
 ```
 
 ```{r}
 #CARGAMOS LA IMAGEN
-library("jpeg")
-plt <- readJPEG("./outputs/plots/exp_1.jpg",native=TRUE)
-plot(0:0,0:0, type="n",ann=FALSE,axes=FALSE)
-rasterImage(plt,0,0,1,1)
-
+suppressPackageStartupMessages(library(imager))
+im<-load.image("./outputs/plots/exp_1.jpg")
+plot(im, axes=FALSE)
+#VER SI LA PODEMOS AGRANDAR!!!!!!!!!!!!!
 ```
+
+#### Análisis de hipótesis
+
+1.  Dados los AUC reportados podemos confirmar que CO2 tiene mayor performance que Churn y Heart. Recordemos que una mayor cantidad de observaciones lleva a que el arbol pueda tomar decisiones más acertadas al tener más información para sacar conclusiones.
+
+2.  Se puede ver claramente en el gráfico que la performance para todos disminuye a medida que la proporción de NAs es mayor. Esto se encuentra un poco relacionado con el item anterior. Tener más información y de buena calidad (datos reales, no fabricados al imputar) lleva a una mayor performance.
+
+3.  Podemos observar varias cosas con respecto a imputar o no los datos al analizar el gráfico.
+
+    -   En primer lugar, vemos que con el dataset de Churn, en proprciones menores de NAs, es mejor no imputarlos. Esto ocurre porque **COMPLETAR**
+
+    -   En segundo lugar, para el dataset CO2 parece ser indiferente imputar o no para proporciones menores de NAs. El cambio es realmente notorio cuando el 90% de los datos son NAs, imputarlos es drásticamente mejor que dejar que el arbol los maneje. Consideramos que esto pasa porque **COMPLETAR**
+
+    -   En tercer lugar vemos que en el dataset de Heart es casi completamente indiferente imputar o no los NAs para cualquier proporción. Esto es debido a **COMPLETAR**
+
+    Por lo tanto rechazamos esta hipótesis dado que solo se cumple notoriamente para CO2 con *prop_NAs* = 0.9 .
+
+#### Una observación extra
+
+Quizás esto no tiene que ver tanto con la proporción de NAs elegida, si se imputan o no, pero notamos que los AUC se estancan a partir de ciertas alturas de los arboles. Entendemos que tiene que ver con la construcción de estos y que según los datos el algoritmo alcanza un tree_depth que le queda cómodo. Igualmente, nos pareció importante construir el siguiente gráfico y ver si se puede extraer alguna conclusión más con respecto a los NAs.
+
+**CREAR GRAFICO**
+
+## Conclusión
+
+**COMPLETAR**
+
+s
+
+

@@ -1,0 +1,35 @@
+---
+title: "Experimento opción 4"
+author: "De Fino - Solari Barrios - Wurzel"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+---
+
+## Hipótesis pre-experimentación
+
+## Experimentación
+
+Importamos el script y el gráfico que este realiza:
+
+```{r}
+#Cargamos el script
+#ADVERTENCIA: correr este bloque de codigo hace que se vuelva a correr el experimento
+suppressWarnings(source("exp_4.R"))
+```
+
+```{r}
+#CARGAMOS LA IMAGEN
+suppressPackageStartupMessages(library(imager))
+im<-load.image("./outputs/plots/exp_4.jpg")
+plot(im, axes=FALSE)
+#VER SI LA PODEMOS AGRANDAR!!!!!!!!!!!!!
+```
+
+#### Análisis de hipótesis
+
+#### Una observación extra (acá liz lo que se te ocurra)
+
+## Conclusión
