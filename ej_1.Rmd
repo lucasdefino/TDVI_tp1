@@ -2,7 +2,10 @@
 title: "Seleccion de un conjunto de datos adicional"
 author: "De Fino - Solari Barrios - Wurzel"
 date: "`r Sys.Date()`"
-output: pdf_document
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
 ---
 
 ### 1.
@@ -10,47 +13,58 @@ output: pdf_document
 Los datos se obtuvieron del sitio Kaggle: <https://www.kaggle.com/datasets/bhuviranga/co2-emissions>
 
 ```{r}
-#LEVANTAR PRIMERAS FILAS DE LA TABLA
+df = read.csv('./data/CO2_Emissions.csv')
+head(df,5)
 ```
 
 ### 2.
 
 ```{r}
-#Cantidad de observaciones:
-
-#Cantidad de variables:
-#Muestro las columnas:
+#Summary de las cosas del dataset
+str(df)
 ```
 
+La cantidad de observaciones de mi dataset es : 7385
+
+La cantidad de variables es : 12
+
+Pasamos a realizar una pequeña descripción de todas las variables:
+
 > -   Make: fabricante del auto
-
 > -   Model: modelo del auto
-
-> -   Vehicle Class: carrocería
-
-> -   Engine Size(L): tamaño del motor en litros
-
+> -   Vehicle.Class: carrocería
+> -   Engine.Size.L.: tamaño del motor en litros
 > -   Cylinders: cantidad de cilindros
-
 > -   Transmission: Transmision
-
-> -   Fuel Type: tipo de combustible
-
-> -   Fuel Consumption City (L/100 km): consumision de combustible en la ciudad medido en litros sobre 100km
-
-> -   Fuel Consumption Hwy (L/100 km): consumision de combustible en ruta medido en litros sobre 100km
-
-> -   Fuel Consumption Comb (L/100 km): consumision de combustible en ciudad y ruta combinados medido en litros por 100km
-
-> -   Fuel Consumption Comb (mpg): consumision de combustible en ciudad y ruta combinados medido en millas por galón
-
+> -   Fuel.Type: tipo de combustible
+> -   Fuel.Consumption.City..L.100.km.: consumision de combustible en la ciudad medido en litros sobre 100km
+> -   Fuel.Consumption.Hwy..L.100.km.: consumision de combustible en ruta medido en litros sobre 100km
+> -   Fuel.Consumption.Comb..L.100.km.: consumision de combustible en ciudad y ruta combinados medido en litros por 100km
+> -   Fuel.Consumption.Comb..mpg.: consumision de combustible en ciudad y ruta combinados medido en millas por galón
 > -   CO2.Emissions.g.km: emisiones de carbono medido en gramos por kilometro
 
 ```{r}
+#Librería que vamos a utilizar para analizar mi dataset
+suppressPackageStartupMessages(library("dplyr"))
+
 #Tipo de variables: 
+length(select_if(df,is.numeric))
+length(select_if(df,is.logical))
+length(select_if(df,is.character))
 
 #Cantidad de valores faltantes:
+sum(sapply(df, function(x) sum(is.na(x))))
 ```
+
+Mi dataset contiene:
+
+-   7 variables numéricas
+
+-   0 variables lógicas
+
+-   5 variables categóricas
+
+Por otro lado, mi dataset tiene una cantidad total de cero valores NAs
 
 ### 3.
 
@@ -61,8 +75,6 @@ Se intentará predecir si las emisiones de carbono del automóvil superarán 200
 Decidimos realizar una única transformación al conjunto de datos modificando la columna "CO2.Emissions.g.km" donde 1 indica que el vehiculo califica para el impuesto (CO2.Emissions.g.km \> 200 g/km) y 0 si no.
 
 ```{r}
-df = read.csv('./data/CO2_Emissions.csv')
-
 mayores_a_200gkm <- df$CO2.Emissions.g.km > 200
 mayores_a_200gkm <- as.integer(as.logical(mayores_a_200gkm))
 
@@ -70,6 +82,8 @@ df$CO2.Emissions.g.km <- mayores_a_200gkm
 ```
 
 ### 5.
+
+Creamos el nuevo cvs con los datos transformados
 
 ```{r}
 write.csv(df, "./data/CO2_Emissions_Transformado.csv", row.names=FALSE)
