@@ -1629,8 +1629,9 @@ adicional</h1>
 </div>
 
 
-<div id="section" class="section level3">
-<h3>1.</h3>
+<p><br /></p>
+<div id="fuente-de-los-datos" class="section level4">
+<h4>Fuente de los datos</h4>
 <p>Los datos se obtuvieron del sitio Kaggle: <a href="https://www.kaggle.com/datasets/bhuviranga/co2-emissions" class="uri">https://www.kaggle.com/datasets/bhuviranga/co2-emissions</a></p>
 <pre class="r"><code>df = read.csv(&#39;./data/CO2_Emissions.csv&#39;)
 head(df,5)</code></pre>
@@ -1639,9 +1640,10 @@ head(df,5)</code></pre>
 {"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Make"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Model"],"name":[2],"type":["chr"],"align":["left"]},{"label":["Vehicle.Class"],"name":[3],"type":["chr"],"align":["left"]},{"label":["Engine.Size.L."],"name":[4],"type":["dbl"],"align":["right"]},{"label":["Cylinders"],"name":[5],"type":["int"],"align":["right"]},{"label":["Transmission"],"name":[6],"type":["chr"],"align":["left"]},{"label":["Fuel.Type"],"name":[7],"type":["chr"],"align":["left"]},{"label":["Fuel.Consumption.City..L.100.km."],"name":[8],"type":["dbl"],"align":["right"]},{"label":["Fuel.Consumption.Hwy..L.100.km."],"name":[9],"type":["dbl"],"align":["right"]},{"label":["Fuel.Consumption.Comb..L.100.km."],"name":[10],"type":["dbl"],"align":["right"]},{"label":["Fuel.Consumption.Comb..mpg."],"name":[11],"type":["int"],"align":["right"]},{"label":["CO2.Emissions.g.km"],"name":[12],"type":["int"],"align":["right"]}],"data":[{"1":"ACURA","2":"ILX","3":"COMPACT","4":"2.0","5":"4","6":"AS5","7":"Z","8":"9.9","9":"6.7","10":"8.5","11":"33","12":"196","_rn_":"1"},{"1":"ACURA","2":"ILX","3":"COMPACT","4":"2.4","5":"4","6":"M6","7":"Z","8":"11.2","9":"7.7","10":"9.6","11":"29","12":"221","_rn_":"2"},{"1":"ACURA","2":"ILX HYBRID","3":"COMPACT","4":"1.5","5":"4","6":"AV7","7":"Z","8":"6.0","9":"5.8","10":"5.9","11":"48","12":"136","_rn_":"3"},{"1":"ACURA","2":"MDX 4WD","3":"SUV - SMALL","4":"3.5","5":"6","6":"AS6","7":"Z","8":"12.7","9":"9.1","10":"11.1","11":"25","12":"255","_rn_":"4"},{"1":"ACURA","2":"RDX AWD","3":"SUV - SMALL","4":"3.5","5":"6","6":"AS6","7":"Z","8":"12.1","9":"8.7","10":"10.6","11":"27","12":"244","_rn_":"5"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
+<p><br /></p>
 </div>
-<div id="section-1" class="section level3">
-<h3>2.</h3>
+<div id="características-principales" class="section level4">
+<h4>Características principales</h4>
 <pre class="r"><code>#Summary de las cosas del dataset
 str(df)</code></pre>
 <pre><code>## &#39;data.frame&#39;:    7385 obs. of  12 variables:
@@ -1661,31 +1663,29 @@ str(df)</code></pre>
 <p>La cantidad de variables es : 12</p>
 <p>Pasamos a realizar una pequeña descripción de todas las
 variables:</p>
-<blockquote>
 <ul>
-<li>Make: fabricante del auto</li>
-<li>Model: modelo del auto</li>
-<li>Vehicle.Class: carrocería</li>
-<li>Engine.Size.L.: tamaño del motor en litros</li>
-<li>Cylinders: cantidad de cilindros</li>
-<li>Transmission: Transmision</li>
-<li>Fuel.Type: tipo de combustible</li>
-<li>Fuel.Consumption.City..L.100.km.: consumision de combustible en la
-ciudad medido en litros sobre 100km</li>
-<li>Fuel.Consumption.Hwy..L.100.km.: consumision de combustible en ruta
-medido en litros sobre 100km</li>
-<li>Fuel.Consumption.Comb..L.100.km.: consumision de combustible en
-ciudad y ruta combinados medido en litros por 100km</li>
-<li>Fuel.Consumption.Comb..mpg.: consumision de combustible en ciudad y
-ruta combinados medido en millas por galón</li>
-<li>CO2.Emissions.g.km: emisiones de carbono medido en gramos por
-kilometro</li>
+<li><p>Make: fabricante del auto</p></li>
+<li><p>Model: modelo del auto</p></li>
+<li><p>Vehicle.Class: carrocería</p></li>
+<li><p>Engine.Size.L.: tamaño del motor en litros</p></li>
+<li><p>Cylinders: cantidad de cilindros</p></li>
+<li><p>Transmission: Transmision</p></li>
+<li><p>Fuel.Type: tipo de combustible</p></li>
+<li><p>Fuel.Consumption.City..L.100.km.: consumision de combustible en
+la ciudad medido en litros sobre 100km</p></li>
+<li><p>Fuel.Consumption.Hwy..L.100.km.: consumision de combustible en
+ruta medido en litros sobre 100km</p></li>
+<li><p>Fuel.Consumption.Comb..L.100.km.: consumision de combustible en
+ciudad y ruta combinados medido en litros por 100km</p></li>
+<li><p>Fuel.Consumption.Comb..mpg.: consumision de combustible en ciudad
+y ruta combinados medido en millas por galón</p></li>
+<li><p>CO2.Emissions.g.km: emisiones de carbono medido en gramos por
+kilometro</p></li>
 </ul>
-</blockquote>
 <pre class="r"><code>#Librería que vamos a utilizar para analizar mi dataset
-suppressPackageStartupMessages(library(&quot;dplyr&quot;))
-
-#Tipo de variables: 
+suppressPackageStartupMessages(library(&quot;dplyr&quot;))</code></pre>
+<pre><code>## Warning: package &#39;dplyr&#39; was built under R version 4.2.3</code></pre>
+<pre class="r"><code>#Tipo de variables: 
 length(select_if(df,is.numeric))</code></pre>
 <pre><code>## [1] 7</code></pre>
 <pre class="r"><code>length(select_if(df,is.logical))</code></pre>
@@ -1697,15 +1697,15 @@ sum(sapply(df, function(x) sum(is.na(x))))</code></pre>
 <pre><code>## [1] 0</code></pre>
 <p>Mi dataset contiene:</p>
 <ul>
-<li><p>Siete variables numéricas</p></li>
-<li><p>Cero variables lógicas</p></li>
-<li><p>Cinco variables categóricas</p></li>
+<li><p>7 variables numéricas</p></li>
+<li><p>0 variables lógicas</p></li>
+<li><p>5 variables categóricas</p></li>
 </ul>
-<p>Por otro lado, mi dataset tiene una cantidad total de cero valores
-NAs</p>
+<p>Nuestro dataset no contiene NAs</p>
+<p><br /></p>
 </div>
-<div id="section-2" class="section level3">
-<h3>3.</h3>
+<div id="lo-que-vamos-a-predecir" class="section level4">
+<h4>Lo que vamos a predecir</h4>
 <p>Se intentará predecir si las emisiones de carbono del automóvil
 superarán 200 g/km, calificando para la mayor tasa de impuestos por
 emisiones (14,75%) según la normativa española IEDMT (Impuesto Esecial
@@ -1713,9 +1713,10 @@ sobre Determinados Medios de Transporte, Artículo 65 de la Ley 38/1992).
 Elegimos establecer el umbral propuesto por España al ser el país cuya
 normativa fue más clara. Argentina por el momento no tiene una
 regulación vigente para vehículos particulares.</p>
+<p><br /></p>
 </div>
-<div id="section-3" class="section level3">
-<h3>4.</h3>
+<div id="transformación-a-los-datos" class="section level4">
+<h4>Transformación a los datos</h4>
 <p>Decidimos realizar una única transformación al conjunto de datos
 modificando la columna “CO2.Emissions.g.km” donde 1 indica que el
 vehiculo califica para el impuesto (CO2.Emissions.g.km &gt; 200 g/km) y
@@ -1724,10 +1725,11 @@ vehiculo califica para el impuesto (CO2.Emissions.g.km &gt; 200 g/km) y
 mayores_a_200gkm &lt;- as.integer(as.logical(mayores_a_200gkm))
 
 df$CO2.Emissions.g.km &lt;- mayores_a_200gkm</code></pre>
+<p><br /></p>
 </div>
-<div id="section-4" class="section level3">
-<h3>5.</h3>
-<p>Creamos el nuevo cvs con los datos transformados</p>
+<div id="guardamos-el-nuevo-archivo" class="section level4">
+<h4>Guardamos el nuevo archivo</h4>
+<p>Creamos el nuevo cvs con los datos transformados:</p>
 <pre class="r"><code>write.csv(df, &quot;./data/CO2_Emissions_Transformado.csv&quot;, row.names=FALSE)</code></pre>
 </div>
 

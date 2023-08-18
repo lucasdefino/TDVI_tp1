@@ -115,17 +115,20 @@ plot_exp_results <- function(filename_exp_results, filename_plot, width, height)
   g <- ggplot(data_for_plot, aes(x=maxdepth, y=mean_auc, color=IMPUTED)) +
     geom_line() +
     theme_bw() +
+    ggtitle("Proportion of NAs")+
     xlab("Maximum tree depth") +
     ylab("AUC (estimated through repeated validation)") +
     facet_grid(dataset_name ~ prop_NAs, scales="free_y") +
     theme(legend.position="bottom",
           panel.grid.major=element_blank(),
           strip.background=element_blank(),
-          panel.border=element_rect(colour="black", fill=NA))
+          panel.border=element_rect(colour="black", fill=NA),
+          plot.title.position = 'plot',
+          plot.title = element_text(hjust=0.5, size=10))
 
   # Save the plot to a file
   ggsave(filename_plot, g, width=width, height=height)
-  g
+  print(g)
 }
 
 # Load the datasets

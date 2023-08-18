@@ -90,7 +90,7 @@ plot_exp_results <- function(filename_exp_results, filename_plot, width, height)
   # Load experiment results
   exp_results <- read.table(filename_exp_results, header=TRUE, sep="\t")
 
-  # Calculate mean AUC values for different groups of experimental results
+  # Calculate max AUC values for different groups of experimental results
   data_for_plot <- exp_results %>%
     group_by(dataset_name, prop_switch_y, maxdepth) %>%
     summarize(mean_auc=mean(auc), .groups='drop_last') %>%
