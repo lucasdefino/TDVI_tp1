@@ -1634,10 +1634,28 @@ adicional</h1>
 <h4>Fuente de los datos</h4>
 <p>Los datos se obtuvieron del sitio Kaggle: <a href="https://www.kaggle.com/datasets/bhuviranga/co2-emissions" class="uri">https://www.kaggle.com/datasets/bhuviranga/co2-emissions</a></p>
 <pre class="r"><code>df = read.csv(&#39;./data/CO2_Emissions.csv&#39;)
-head(df,5)</code></pre>
+head(df[0:5],5)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Make"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Model"],"name":[2],"type":["chr"],"align":["left"]},{"label":["Vehicle.Class"],"name":[3],"type":["chr"],"align":["left"]},{"label":["Engine.Size.L."],"name":[4],"type":["dbl"],"align":["right"]},{"label":["Cylinders"],"name":[5],"type":["int"],"align":["right"]},{"label":["Transmission"],"name":[6],"type":["chr"],"align":["left"]},{"label":["Fuel.Type"],"name":[7],"type":["chr"],"align":["left"]},{"label":["Fuel.Consumption.City..L.100.km."],"name":[8],"type":["dbl"],"align":["right"]},{"label":["Fuel.Consumption.Hwy..L.100.km."],"name":[9],"type":["dbl"],"align":["right"]},{"label":["Fuel.Consumption.Comb..L.100.km."],"name":[10],"type":["dbl"],"align":["right"]},{"label":["Fuel.Consumption.Comb..mpg."],"name":[11],"type":["int"],"align":["right"]},{"label":["CO2.Emissions.g.km"],"name":[12],"type":["int"],"align":["right"]}],"data":[{"1":"ACURA","2":"ILX","3":"COMPACT","4":"2.0","5":"4","6":"AS5","7":"Z","8":"9.9","9":"6.7","10":"8.5","11":"33","12":"196","_rn_":"1"},{"1":"ACURA","2":"ILX","3":"COMPACT","4":"2.4","5":"4","6":"M6","7":"Z","8":"11.2","9":"7.7","10":"9.6","11":"29","12":"221","_rn_":"2"},{"1":"ACURA","2":"ILX HYBRID","3":"COMPACT","4":"1.5","5":"4","6":"AV7","7":"Z","8":"6.0","9":"5.8","10":"5.9","11":"48","12":"136","_rn_":"3"},{"1":"ACURA","2":"MDX 4WD","3":"SUV - SMALL","4":"3.5","5":"6","6":"AS6","7":"Z","8":"12.7","9":"9.1","10":"11.1","11":"25","12":"255","_rn_":"4"},{"1":"ACURA","2":"RDX AWD","3":"SUV - SMALL","4":"3.5","5":"6","6":"AS6","7":"Z","8":"12.1","9":"8.7","10":"10.6","11":"27","12":"244","_rn_":"5"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Make"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Model"],"name":[2],"type":["chr"],"align":["left"]},{"label":["Vehicle.Class"],"name":[3],"type":["chr"],"align":["left"]},{"label":["Engine.Size.L."],"name":[4],"type":["dbl"],"align":["right"]},{"label":["Cylinders"],"name":[5],"type":["int"],"align":["right"]}],"data":[{"1":"ACURA","2":"ILX","3":"COMPACT","4":"2.0","5":"4","_rn_":"1"},{"1":"ACURA","2":"ILX","3":"COMPACT","4":"2.4","5":"4","_rn_":"2"},{"1":"ACURA","2":"ILX HYBRID","3":"COMPACT","4":"1.5","5":"4","_rn_":"3"},{"1":"ACURA","2":"MDX 4WD","3":"SUV - SMALL","4":"3.5","5":"6","_rn_":"4"},{"1":"ACURA","2":"RDX AWD","3":"SUV - SMALL","4":"3.5","5":"6","_rn_":"5"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code>head(df[6:8],5)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Transmission"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Fuel.Type"],"name":[2],"type":["chr"],"align":["left"]},{"label":["Fuel.Consumption.City..L.100.km."],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"AS5","2":"Z","3":"9.9","_rn_":"1"},{"1":"M6","2":"Z","3":"11.2","_rn_":"2"},{"1":"AV7","2":"Z","3":"6.0","_rn_":"3"},{"1":"AS6","2":"Z","3":"12.7","_rn_":"4"},{"1":"AS6","2":"Z","3":"12.1","_rn_":"5"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code>head(df[9:10],5)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Fuel.Consumption.Hwy..L.100.km."],"name":[1],"type":["dbl"],"align":["right"]},{"label":["Fuel.Consumption.Comb..L.100.km."],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"6.7","2":"8.5","_rn_":"1"},{"1":"7.7","2":"9.6","_rn_":"2"},{"1":"5.8","2":"5.9","_rn_":"3"},{"1":"9.1","2":"11.1","_rn_":"4"},{"1":"8.7","2":"10.6","_rn_":"5"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code>head(df[11:12],5)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Fuel.Consumption.Comb..mpg."],"name":[1],"type":["int"],"align":["right"]},{"label":["CO2.Emissions.g.km"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"33","2":"196","_rn_":"1"},{"1":"29","2":"221","_rn_":"2"},{"1":"48","2":"136","_rn_":"3"},{"1":"25","2":"255","_rn_":"4"},{"1":"27","2":"244","_rn_":"5"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <p><br /></p>
@@ -1683,9 +1701,9 @@ y ruta combinados medido en millas por galón</p></li>
 kilometro</p></li>
 </ul>
 <pre class="r"><code>#Librería que vamos a utilizar para analizar mi dataset
-suppressPackageStartupMessages(library(&quot;dplyr&quot;))</code></pre>
-<pre><code>## Warning: package &#39;dplyr&#39; was built under R version 4.2.3</code></pre>
-<pre class="r"><code>#Tipo de variables: 
+suppressPackageStartupMessages(library(&quot;dplyr&quot;))
+
+#Tipo de variables: 
 length(select_if(df,is.numeric))</code></pre>
 <pre><code>## [1] 7</code></pre>
 <pre class="r"><code>length(select_if(df,is.logical))</code></pre>
