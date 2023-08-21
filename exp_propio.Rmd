@@ -1,0 +1,30 @@
+---
+title: "Experimento propio"
+author: "De Fino - Solari Barrios - Wurzel"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+---
+
+## Elección del experimento
+
+A raíz de los resultados obtenidos en las opciones 1 y 4 decidimos combinarlos
+
+## Hipótesis pre-experimentación
+
+## Experimentación
+
+Importamos el script y el gráfico que este realiza:
+
+```{r}
+#Cargamos el script
+suppressWarnings(source("exp_propio.R"))
+```
+
+#### Análisis de hipótesis
+
+#### Una observación extra 
+
+## Conclusión

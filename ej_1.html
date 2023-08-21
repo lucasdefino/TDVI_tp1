@@ -11,7 +11,7 @@
 
 <meta name="author" content="De Fino - Solari Barrios - Wurzel" />
 
-<meta name="date" content="2023-08-18" />
+<meta name="date" content="2023-08-20" />
 
 <title>Seleccion de un conjunto de datos adicional</title>
 
@@ -1624,7 +1624,7 @@ display: none;
 <h1 class="title toc-ignore">Seleccion de un conjunto de datos
 adicional</h1>
 <h4 class="author">De Fino - Solari Barrios - Wurzel</h4>
-<h4 class="date">2023-08-18</h4>
+<h4 class="date">2023-08-20</h4>
 
 </div>
 
@@ -1634,6 +1634,7 @@ adicional</h1>
 <h4>Fuente de los datos</h4>
 <p>Los datos se obtuvieron del sitio Kaggle: <a href="https://www.kaggle.com/datasets/bhuviranga/co2-emissions" class="uri">https://www.kaggle.com/datasets/bhuviranga/co2-emissions</a></p>
 <pre class="r"><code>df = read.csv(&#39;./data/CO2_Emissions.csv&#39;)
+#Desplegamos los primeros 5 datos de todas las variables del dataset
 head(df[0:5],5)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
@@ -1701,9 +1702,9 @@ y ruta combinados medido en millas por galón</p></li>
 kilometro</p></li>
 </ul>
 <pre class="r"><code>#Librería que vamos a utilizar para analizar mi dataset
-suppressPackageStartupMessages(library(&quot;dplyr&quot;))
-
-#Tipo de variables: 
+suppressPackageStartupMessages(library(&quot;dplyr&quot;))</code></pre>
+<pre><code>## Warning: package &#39;dplyr&#39; was built under R version 4.2.3</code></pre>
+<pre class="r"><code>#Tipo de variables: 
 length(select_if(df,is.numeric))</code></pre>
 <pre><code>## [1] 7</code></pre>
 <pre class="r"><code>length(select_if(df,is.logical))</code></pre>
