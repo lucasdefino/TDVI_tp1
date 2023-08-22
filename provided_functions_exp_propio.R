@@ -61,6 +61,7 @@ load_df <- function(filepath, dataset_name, var_to_predict) {
 #' @param prop_switch_x Proportion of target variable values to switch if specified.
 #' @param var_to_switch Name of the variable to switch
 #' @param dataset_actual Name of the current dataset
+#' @param q_to_switch Quantity of attributes to get switched
 #' @return A list containing the preprocessed training and validation data frames.
 #'
 #' @details This function preprocesses the input data frames by performing the following tasks:
@@ -77,7 +78,7 @@ load_df <- function(filepath, dataset_name, var_to_predict) {
 preprocess_data <- function(var_to_predict, train_df, val_df,
                             prop_NAs, impute_NAs, treat_NAs_as_new_levels,
                             do_ohe, discretize, n_bins, ord_to_numeric,
-                            prop_switch_x, dataset_actual) {
+                            prop_switch_x, dataset_actual, q_to_switch) {
   
   # Add a obs id value to both datasets
   if ("obs_id_value" %in% colnames(train_df)) {
@@ -189,16 +190,18 @@ preprocess_data <- function(var_to_predict, train_df, val_df,
     }
     
     importance_scores <- tree$variable.importance
-    most_important_attribute <- names(importance_scores)[which.max(importance_scores)]
-    var_to_switch <- most_important_attribute
+    important_attributes_sorted <- names(importance_scores)
     
     #SWITCHEAMOS
-    x_to_switch <- sample(X_train$obs_id_value, ceiling(nrow(X_train) * prop_switch_x))
-    to_switch <- X_train$obs_id_value %in% x_to_switch
-    x_numeric_new <- as.numeric(X_train[[var_to_switch]]) %% 2 + 1
-    class_levels <- levels(X_train[[var_to_switch]])
-    switched_val <- factor(sapply(x_numeric_new, function(x) class_levels[x]), levels=class_levels)
-    X_train[to_switch, var_to_switch] <- switched_val[to_switch]
+    for (i in 1:q_to_switch){
+      var_to_switch <- important_attributes_sorted[i]
+      x_to_switch <- sample(X_train$obs_id_value, ceiling(nrow(X_train) * prop_switch_x))
+      to_switch <- X_train$obs_id_value %in% x_to_switch
+      x_numeric_new <- as.numeric(X_train[[var_to_switch]]) %% 2 + 1
+      class_levels <- levels(X_train[[var_to_switch]])
+      switched_val <- factor(sapply(x_numeric_new, function(x) class_levels[x]), levels=class_levels)
+      X_train[to_switch, var_to_switch] <- switched_val[to_switch]
+    }
   }
 
   # Combining the target variable back to the data frames
@@ -262,7 +265,8 @@ rep_val_estimate <- function(var_to_predict, tree_control, data_df, prop_val, re
                                      preprocess_control$n_bins,
                                      preprocess_control$ord_to_numeric,
                                      preprocess_control$prop_switch_x,
-                                     preprocess_control$dataset_actual)
+                                     preprocess_control$dataset_actual,
+                                     preprocess_control$q_to_switch)
 
     # Fit decision tree and predict on the validation set
     trained_tree <- rpart(as.formula(paste(var_to_predict, " ~ .")),

@@ -9,7 +9,7 @@ N_BINS <- 10        # Define the number of bins for discretization
 RERUN_EXP <- FALSE   # Set the option to rerun the experiment
 
 # Load provided functions
-source("provided_functions.R")
+source("provided_functions_exp_propio.R")
 
 #Set seed
 set.seed(006396374)
@@ -26,63 +26,52 @@ set.seed(006396374)
 #' the experiment, and stores the results in a list. The list of results is then combined into
 #' a single data frame, which is saved to the specified file.
 #'
+
+
 run_experiment <- function(datasets_to_pred, filepath) {
   exp_results <- list()  # Store experiment results
   i <- 1  # Initialize counter for experiment results
 
   # Iterate through different dataset, imputation, and proportion of missing values combinations
   for (dtp in datasets_to_pred) {
-    for (impute in c("Yes","No")) {
-      for (prop_NAs in seq(0.1, 0.9, 0.2)){
-        for (prop_switch_y in seq(0, 0.5, 0.05)) {
-          print(c(dtp$dataset_name, impute, prop_NAs, prop_switch_y))
+    for (prop_switch_x in seq(0.1, 1, 0.3)) {
+      for (q_to_switch in c(1, 2, 3)) {
+        
+        print(c(dtp$dataset_name, prop_switch_x, q_to_switch))
+        
+        preprocess_control <- list(
+          prop_NAs=0,
+          impute_NAs=FALSE,
+          treat_NAs_as_new_levels=FALSE,
+          do_ohe=FALSE,
+          discretize=FALSE,
+          n_bins=N_BINS,
+          ord_to_numeric=FALSE,
+          prop_switch_x=prop_switch_x,
+          dataset_actual=dtp$dataset_name,
+          q_to_switch=q_to_switch
+        )
   
-          # Configure preprocessing options based on imputation choice
-          if (impute == "Yes") {
-            preprocess_control <- list(
-              prop_NAs=0,
-              impute_NAs=TRUE,
-              treat_NAs_as_new_levels=FALSE,
-              do_ohe=FALSE,
-              discretize=FALSE,
-              n_bins=N_BINS,
-              ord_to_numeric=FALSE,
-              prop_switch_y=prop_switch_y
-            )
-          } else if (impute == "No") {
-            preprocess_control <- list(
-              prop_NAs=0,
-              impute_NAs=FALSE,
-              treat_NAs_as_new_levels=FALSE,
-              do_ohe=FALSE,
-              discretize=FALSE,
-              n_bins=N_BINS,
-              ord_to_numeric=FALSE,
-              prop_switch_y=prop_switch_y
-            )
-          }
-  
-          # Perform the experiment for the current settings
-          if (PARALLELIZE == TRUE) {
-            res_tmp <- est_auc_across_depths(dtp, preprocess_control,
-                                             max_maxdepth=30, prop_val=0.25,
-                                             val_reps=30)
-          } else {
-            res_tmp <- est_auc_across_depths_no_par(dtp, preprocess_control,
-                                                    max_maxdepth=30, prop_val=0.25,
-                                                    val_reps=30)
-          }
-  
-          res_tmp$IMPUTED <- impute
-          res_tmp$prop_NAs <- prop_NAs
-          res_tmp$prop_switch_y <- prop_switch_y
-          exp_results[[i]] <- res_tmp
-          rm(res_tmp)  # Clean up temporary result
-          i <- i + 1  # Increment result counter
+        # Perform the experiment for the current settings
+        if (PARALLELIZE == TRUE) {
+          res_tmp <- est_auc_across_depths(dtp, preprocess_control,
+                                           max_maxdepth=30, prop_val=0.25,
+                                           val_reps=30)
+        } else {
+          res_tmp <- est_auc_across_depths_no_par(dtp, preprocess_control,
+                                                  max_maxdepth=30, prop_val=0.25,
+                                                  val_reps=30)
         }
+        
+        res_tmp$prop_switch_x <- prop_switch_x
+        res_tmp$q_to_switch <- q_to_switch
+        exp_results[[i]] <- res_tmp
+        rm(res_tmp)  # Clean up temporary result
+        i <- i + 1  # Increment result counter
       }
     }
   }
+  
 
   # Combine experiment results into a single data frame
   exp_results <- do.call(rbind, exp_results)
@@ -108,21 +97,22 @@ run_experiment <- function(datasets_to_pred, filepath) {
 plot_exp_results <- function(filename_exp_results, filename_plot, width, height) {
   # Load experiment results
   exp_results <- read.table(filename_exp_results, header=TRUE, sep="\t")
-
-  # Calculate mean AUC values for different groups of experimental results
+  
+  exp_results$q_to_switch <- as.factor(exp_results$q_to_switch)
+  
+  # Calculate max AUC values for different groups of experimental results
   data_for_plot <- exp_results %>%
-    group_by(dataset_name, prop_NAs, prop_switch_y, IMPUTED, maxdepth) %>%
-    summarize(mean_auc=mean(auc), .groups='drop_last') %>%
-    summarize(max_auc=max(mean_auc), .groups='drop')
+    group_by(dataset_name, q_to_switch, prop_switch_x, maxdepth) %>%
+    summarize(mean_auc=mean(auc), .groups='drop')
 
   # Create a ggplot object for the line plot
-  g <- ggplot(data_for_plot, aes(x=prop_switch_y, y=max_auc, color=IMPUTED)) +
+  g <- ggplot(data_for_plot, aes(x=maxdepth, y=mean_auc, color=q_to_switch)) +
     geom_line() +
     theme_bw() +
-    ggtitle("Proportion of NAs")+
-    xlab("Proportion of Y switched faceted by Proportion of NAs") +
-    ylab("max AUC (estimated through repeated validation)") +
-    facet_grid(dataset_name ~ prop_NAs, scales="free_y") +
+    ggtitle("Proportion of X switched")+
+    xlab("Max tree depth") +
+    ylab("AUC (estimated through repeated validation)") +
+    facet_grid(dataset_name ~ prop_switch_x, scales="free_y") +
     theme(legend.position="bottom",
           panel.grid.major=element_blank(),
           strip.background=element_blank(),
@@ -132,8 +122,6 @@ plot_exp_results <- function(filename_exp_results, filename_plot, width, height)
 
   # Save the plot to a file
   ggsave(filename_plot, g, width=width, height=height)
-  
-  # Printeamos para mostrarlo por pantalla
   print(g)
 }
 
@@ -146,8 +134,9 @@ datasets_to_pred <- list(
 
 # Run the experiment
 if (RERUN_EXP ==  TRUE) {
-  run_experiment(datasets_to_pred, "./outputs/tables/exp_propio.txt")
+  run_experiment(datasets_to_pred, "./outputs/tables/exp_propio_pt2.txt")
 }
 
+
 # Plot the experiment results
-plot_exp_results( "./outputs/tables/exp_propio.txt", "./outputs/plots/exp_propio.jpg", width=15, height=8)
+plot_exp_results( "./outputs/tables/exp_propio_pt2.txt", "./outputs/plots/exp_propio_pt2.jpg", width=15, height=8)
