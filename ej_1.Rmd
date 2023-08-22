@@ -95,13 +95,16 @@ Se intentará predecir si las emisiones de carbono del automóvil superarán 200
 
 #### Transformación a los datos
 
-Decidimos realizar una única transformación al conjunto de datos modificando la columna "CO2.Emissions.g.km" donde 1 indica que el vehiculo califica para el impuesto (CO2.Emissions.g.km \> 200 g/km) y 0 si no.
+Decidimos realizar una única transformación al conjunto de datos modificando la columna "CO2.Emissions.g.km" para que 1 indique si el vehiculo califica para el impuesto (CO2.Emissions.g.km \> 200 g/km) y 0 si no. Además renombramos la columna a "CO2.Emissions.gt.200gkm" (CO2 Emissions greater than 200gkm).
 
 ```{r}
 mayores_a_200gkm <- df$CO2.Emissions.g.km > 200
 mayores_a_200gkm <- as.integer(as.logical(mayores_a_200gkm))
 
 df$CO2.Emissions.g.km <- mayores_a_200gkm
+
+df <- df %>%
+  rename(CO2.Emissions.gt.200gkm = CO2.Emissions.g.km)
 ```
 
 <br/>

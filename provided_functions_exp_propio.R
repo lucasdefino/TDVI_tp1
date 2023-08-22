@@ -175,10 +175,11 @@ preprocess_data <- function(var_to_predict, train_df, val_df,
   # SWITCH ATRIBUTE VALUES
   if (prop_switch_x > 0) {
     
-    #OBTENEMOS LA VARIABLE A SWITCHEAR
+    #OBTENEMOS LA VARIABLE A SWITCHEAR Y ENTRENAMOS UN ARBOL PREVIO PARA
+    #CONOCER LOS ATRIBUTOS MAS IMPORTANTES
     if (dataset_actual == "CO2"){
       df <- read.csv("./data/CO2_Emissions_Transformado.csv")
-      tree <- rpart(CO2.Emissions.g.km~., data = df, control=rpart.control(minsplit=2, minbucket=1, maxdepth=10, cp=0, xval=0))
+      tree <- rpart(CO2.Emissions.gt.200gkm~., data = df, control=rpart.control(minsplit=2, minbucket=1, maxdepth=10, cp=0, xval=0))
     }
     if (dataset_actual == "Heart"){
       df <- read.csv("./data/heart.csv")

@@ -11,7 +11,7 @@
 
 <meta name="author" content="De Fino - Solari Barrios - Wurzel" />
 
-<meta name="date" content="2023-08-20" />
+<meta name="date" content="2023-08-22" />
 
 <title>Seleccion de un conjunto de datos adicional</title>
 
@@ -1624,7 +1624,7 @@ display: none;
 <h1 class="title toc-ignore">Seleccion de un conjunto de datos
 adicional</h1>
 <h4 class="author">De Fino - Solari Barrios - Wurzel</h4>
-<h4 class="date">2023-08-20</h4>
+<h4 class="date">2023-08-22</h4>
 
 </div>
 
@@ -1737,13 +1737,17 @@ regulación vigente para vehículos particulares.</p>
 <div id="transformación-a-los-datos" class="section level4">
 <h4>Transformación a los datos</h4>
 <p>Decidimos realizar una única transformación al conjunto de datos
-modificando la columna “CO2.Emissions.g.km” donde 1 indica que el
+modificando la columna “CO2.Emissions.g.km” para que 1 indique si el
 vehiculo califica para el impuesto (CO2.Emissions.g.km &gt; 200 g/km) y
-0 si no.</p>
+0 si no. Además renombramos la columna a “CO2.Emissions.gt.200gkm” (CO2
+Emissions greater than 200gkm).</p>
 <pre class="r"><code>mayores_a_200gkm &lt;- df$CO2.Emissions.g.km &gt; 200
 mayores_a_200gkm &lt;- as.integer(as.logical(mayores_a_200gkm))
 
-df$CO2.Emissions.g.km &lt;- mayores_a_200gkm</code></pre>
+df$CO2.Emissions.g.km &lt;- mayores_a_200gkm
+
+df &lt;- df %&gt;%
+  rename(CO2.Emissions.gt.200gkm = CO2.Emissions.g.km)</code></pre>
 <p><br /></p>
 </div>
 <div id="guardamos-el-nuevo-archivo" class="section level4">

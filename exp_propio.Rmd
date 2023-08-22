@@ -32,7 +32,7 @@ Para obtener el atributo más importante tuvimos un par de complicaciones que so
 ```{r, eval=FALSE}
     if (dataset_actual == "CO2"){
       df <- read.csv("./data/CO2_Emissions_Transformado.csv")
-      tree <- rpart(CO2.Emissions.g.km~., data = df, 
+      tree <- rpart(CO2.Emissions.gt.200gkm~., data = df, 
                     control=rpart.control(minsplit=2, minbucket=1, 
                                           maxdepth=10, cp=0, xval=0))
     }
@@ -85,8 +85,10 @@ Veamos que está pasando con la importancia de los atributos en nuestro dataset:
 
 ```{r}
 df <- read.csv("./data/CO2_Emissions_Transformado.csv")
-tree <- rpart(CO2.Emissions.g.km~., data = df, control=rpart.control(minsplit=2, 
-                                          minbucket=1, maxdepth=10, cp=0, xval=0))
+tree <- rpart(CO2.Emissions.gt.200gkm~., data = df, 
+              control=rpart.control(minsplit=2, minbucket=1, 
+                                    maxdepth=10, cp=0, xval=0))
+
 importance_scores <- tree$variable.importance
 knitr::kable(importance_scores, caption = "Importancia de los atributos de CO2", col.names = "")
 ```

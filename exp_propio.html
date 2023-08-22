@@ -11,7 +11,7 @@
 
 <meta name="author" content="De Fino - Solari Barrios - Wurzel" />
 
-<meta name="date" content="2023-08-21" />
+<meta name="date" content="2023-08-22" />
 
 <title>Experimento propio</title>
 
@@ -1623,7 +1623,7 @@ display: none;
 
 <h1 class="title toc-ignore">Experimento propio</h1>
 <h4 class="author">De Fino - Solari Barrios - Wurzel</h4>
-<h4 class="date">2023-08-21</h4>
+<h4 class="date">2023-08-22</h4>
 
 </div>
 
@@ -1652,7 +1652,7 @@ complicaciones que solucionamos de una forma bastante mala hardcodeando
 un par de cosas:</p>
 <pre class="r"><code>    if (dataset_actual == &quot;CO2&quot;){
       df &lt;- read.csv(&quot;./data/CO2_Emissions_Transformado.csv&quot;)
-      tree &lt;- rpart(CO2.Emissions.g.km~., data = df, 
+      tree &lt;- rpart(CO2.Emissions.gt.200gkm~., data = df, 
                     control=rpart.control(minsplit=2, minbucket=1, 
                                           maxdepth=10, cp=0, xval=0))
     }
@@ -1725,8 +1725,10 @@ significativos tampoco es suficiente. Recién con un
 <p>Veamos que está pasando con la importancia de los atributos en
 nuestro dataset:</p>
 <pre class="r"><code>df &lt;- read.csv(&quot;./data/CO2_Emissions_Transformado.csv&quot;)
-tree &lt;- rpart(CO2.Emissions.g.km~., data = df, control=rpart.control(minsplit=2, 
-                                          minbucket=1, maxdepth=10, cp=0, xval=0))
+tree &lt;- rpart(CO2.Emissions.gt.200gkm~., data = df, 
+              control=rpart.control(minsplit=2, minbucket=1, 
+                                    maxdepth=10, cp=0, xval=0))
+
 importance_scores &lt;- tree$variable.importance
 knitr::kable(importance_scores, caption = &quot;Importancia de los atributos de CO2&quot;, col.names = &quot;&quot;)</code></pre>
 <table>

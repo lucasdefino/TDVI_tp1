@@ -110,11 +110,12 @@ plot_exp_results <- function(filename_exp_results, filename_plot, width, height)
 
   # Save the plot to a file
   ggsave(filename_plot, g, width=width, height=height)
+  print(g)
 }
 
 # Load the datasets
 datasets_to_pred <- list(
-  load_df("./data/CO2_Emissions_Transformado.csv", "CO2", "CO2.Emissions.g.km"),
+  load_df("./data/CO2_Emissions_Transformado.csv", "CO2", "CO2.Emissions.gt.200gkm"),
   load_df("./data/heart.csv", "Heart", "HeartDisease"),
   load_df("./data/customer_churn.csv", "Churn", "churn")
 )
@@ -126,4 +127,4 @@ if (RERUN_EXP ==  TRUE) {
 
 
 # Plot the experiment results
-plot_exp_results( "./outputs/tables/exp_4.txt", "./outputs/plots/exp_4.jpg", width=15, height=8)
+plot_exp_results( "./outputs/tables/exp_4.txt", "./outputs/plots/exp_4.jpg", width=15, height=5)
