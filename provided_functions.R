@@ -175,6 +175,16 @@ preprocess_data <- function(var_to_predict, train_df, val_df,
     switched_val <- factor(sapply(y_numeric_new, function(x) class_levels[x]), levels=class_levels)
     y_train[to_switch, var_to_predict] <- switched_val[to_switch]
   }
+  
+  
+  if (prop_noise_x > 0) {
+    noise_level <- 0.1
+    var_to_add_noise <-"Cylinders"
+    num_rows_to_add_noise <- ceiling(nrow(X_train) * prop_noise_x)
+    noise <- rnorm(num_rows_to_add_noise, mean = 0, sd = noise_level * sd(X_train[[var_name]]))
+    X_train[sample(nrow(X_train), num_rows_to_add_noise), var_name] <- X_train[sample(nrow(X_train), num_rows_to_add_noise), var_name] + noise
+  }
+  
 
   # Combining the target variable back to the data frames
   X_train <- merge(X_train, y_train, by="obs_id_value")
@@ -224,6 +234,7 @@ rep_val_estimate <- function(var_to_predict, tree_control, data_df, prop_val, re
     # Split the data into training and validation sets for the current partition
     val_index <- sample(1:nrow(data_df), ceiling(nrow(data_df) * prop_val))
     train_df <- data_df[-val_index,]
+    train_df_anterior <- data_df[-val_index,]
     val_df <- data_df[val_index,]
 
     # Preprocess data for the current partition
@@ -237,6 +248,17 @@ rep_val_estimate <- function(var_to_predict, tree_control, data_df, prop_val, re
                                      preprocess_control$n_bins,
                                      preprocess_control$ord_to_numeric,
                                      preprocess_control$prop_switch_y)
+    
+    differences <- train_df != train_df_anterior
+    
+    # Check if there are any TRUE values in the differences matrix
+    any_differences <- any(differences)
+    
+    if (any_differences) {
+      cat("Noise has been added to the dataset.\n")
+    } else {
+      cat("No differences found. Noise may not have been added successfully.\n")
+    }
 
     # Fit decision tree and predict on the validation set
     trained_tree <- rpart(as.formula(paste(var_to_predict, " ~ .")),

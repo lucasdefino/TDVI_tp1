@@ -4,12 +4,12 @@ library(dplyr)    # For data manipulation
 
 # Constants and global variables
 PARALLELIZE <- TRUE # Set the option for parallelization of computations
-N_THREADS <- 30     # Define the number of threads for parallel processing
-N_BINS <- 10        # Define the number of bins for discretization
-RERUN_EXP <- FALSE   # Set the option to rerun the experiment
+N_THREADS <- 2     # Define the number of threads for parallel processing
+N_BINS <- 1        # Define the number of bins for discretization
+RERUN_EXP <- TRUE   # Set the option to rerun the experiment
 
 # Load provided functions
-source("provided_functions_exp_propio.R")
+source("provided_functions.R")
 
 #Set seed
 set.seed(006396374)
@@ -34,7 +34,7 @@ run_experiment <- function(datasets_to_pred, filepath) {
 
   # Iterate through different dataset, imputation, and proportion of missing values combinations
   for (dtp in datasets_to_pred) {
-    for (prop_switch_x in seq(0.1, 1, 0.3)) {
+    for (prop_switch_y in seq(0)) {
       for (q_to_switch in c(1, 2, 3)) {
         
         print(c(dtp$dataset_name, prop_switch_x, q_to_switch))
@@ -47,7 +47,7 @@ run_experiment <- function(datasets_to_pred, filepath) {
           discretize=FALSE,
           n_bins=N_BINS,
           ord_to_numeric=FALSE,
-          prop_switch_x=prop_switch_x,
+          prop_switch_y=prop_switch_y,
           dataset_actual=dtp$dataset_name,
           q_to_switch=q_to_switch
         )
@@ -128,8 +128,8 @@ plot_exp_results <- function(filename_exp_results, filename_plot, width, height)
 # Load the datasets
 datasets_to_pred <- list(
   load_df("./data/CO2_Emissions_Transformado.csv", "CO2", "CO2.Emissions.gt.200gkm"),
-  load_df("./data/heart.csv", "Heart", "HeartDisease"),
-  load_df("./data/customer_churn.csv", "Churn", "churn")
+  #load_df("./data/heart.csv", "Heart", "HeartDisease"),
+  #load_df("./data/customer_churn.csv", "Churn", "churn")
 )
 
 # Run the experiment

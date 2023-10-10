@@ -6,7 +6,7 @@ suppressPackageStartupMessages(library("dplyr"))  # For data manipulation
 PARALLELIZE <- TRUE # Set the option for parallelization of computations
 N_THREADS <- 30     # Define the number of threads for parallel processing
 N_BINS <- 10        # Define the number of bins for discretization
-RERUN_EXP <- FALSE   # Set the option to rerun the experiment
+RERUN_EXP <- TRUE   # Set the option to rerun the experiment
 
 # Load provided functions
 source("provided_functions.R")
@@ -32,8 +32,8 @@ run_experiment <- function(datasets_to_pred, filepath) {
 
   # Iterate through different dataset, imputation, and proportion of missing values combinations
   for (dtp in datasets_to_pred) {
-    for (impute in c("Yes","No")) {
-      for (prop_NAs in seq(0.1, 0.9, 0.2)) {
+    for (impute in c("No")) {
+      for (prop_NAs in seq(0.1)) {
         print(c(dtp$dataset_name, impute, prop_NAs))
 
         # Configure preprocessing options based on imputation choice
