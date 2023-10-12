@@ -9,7 +9,7 @@ N_BINS <- 10        # Define the number of bins for discretization
 RERUN_EXP <- TRUE   # Set the option to rerun the experiment
 
 # Load provided functions
-source("provided_functions.R")
+source("provided_functions_reentrega.R")
 
 #Set seed
 set.seed(006396374)
@@ -32,9 +32,9 @@ run_experiment <- function(datasets_to_pred, filepath) {
   
   # Iterate through different dataset, imputation, and proportion of missing values combinations
   for (dtp in datasets_to_pred) {
-    for (q in c(1,2,3)) {
-      for (prop_noise_x in c(0.1,0.5,0.7)) {
-        print(c(dtp$dataset_name, q, prop_noise_x))
+    for (q in c(5,8,10,11)) {
+      for (noise_level in c(30)) {
+        print(c(dtp$dataset_name, q, noise_level))
 
         # Configure preprocessing options based on imputation choice
         preprocess_control <- list(
@@ -46,9 +46,10 @@ run_experiment <- function(datasets_to_pred, filepath) {
             n_bins=N_BINS,
             ord_to_numeric=FALSE,
             prop_switch_y=0,
-            prop_noise_x=prop_noise_x,
+            prop_noise_x=1,
             q_noisy_var=q,
-            dataset_actual=dtp$dataset_name
+            dataset_actual=dtp$dataset_name,
+            noise_level=noise_level
           )
         
         # Perform the experiment for the current settings
@@ -63,7 +64,7 @@ run_experiment <- function(datasets_to_pred, filepath) {
         }
         
         res_tmp$q_noisy_var <- q
-        res_tmp$prop_noise_x <- prop_noise_x
+        res_tmp$noise_level <- noise_level
         exp_results[[i]] <- res_tmp
         rm(res_tmp)  # Clean up temporary result
         i <- i + 1  # Increment result counter
@@ -96,21 +97,21 @@ plot_exp_results <- function(filename_exp_results, filename_plot, width, height)
   # Load experiment results
   exp_results <- read.table(filename_exp_results, header=TRUE, sep="\t")
   
-  exp_results$q_noisy_var <- as.factor(exp_results$q_noisy_var)
+  exp_results$noise_level <- as.factor(exp_results$noise_level)
   
   # Calculate max AUC values for different groups of experimental results
   data_for_plot <- exp_results %>%
-    group_by(dataset_name, q_noisy_var, prop_noise_x, maxdepth) %>%
+    group_by(dataset_name, noise_level, q_noisy_var, maxdepth) %>%
     summarize(mean_auc=mean(auc), .groups='drop')
   
   # Create a ggplot object for the line plot
-  g <- ggplot(data_for_plot, aes(x=maxdepth, y=mean_auc, color=q_noisy_var)) +
+  g <- ggplot(data_for_plot, aes(x=maxdepth, y=mean_auc, color=noise_level)) +
     geom_line() +
     theme_bw() +
     ggtitle("Proportion of noisy X")+
     xlab("Max tree depth") +
     ylab("AUC (estimated through repeated validation)") +
-    facet_grid(dataset_name ~ prop_noise_x, scales="free_y") +
+    facet_grid(dataset_name ~ q_noisy_var, scales="free_y") +
     theme(legend.position="bottom",
           panel.grid.major=element_blank(),
           strip.background=element_blank(),
@@ -125,15 +126,15 @@ plot_exp_results <- function(filename_exp_results, filename_plot, width, height)
 
 # Load the datasets
 datasets_to_pred <- list(
-  load_df("./data/CO2_Emissions_Transformado.csv", "CO2", "CO2.Emissions.gt.200gkm")
-  #load_df("./data/heart.csv", "Heart", "HeartDisease"),
+  #load_df("./data/CO2_Emissions_Transformado.csv", "CO2", "CO2.Emissions.gt.200gkm"),
+  load_df("./data/heart.csv", "Heart", "HeartDisease")
   #load_df("./data/customer_churn.csv", "Churn", "churn")
 )
 
 # Run the experiment
 if (RERUN_EXP ==  TRUE) {
-  run_experiment(datasets_to_pred, "./outputs/tables/exp_1.txt")
+  run_experiment(datasets_to_pred, "./outputs/tables/exp_propio.txt")
 }
 
 # Plot the experiment results
-plot_exp_results( "./outputs/tables/exp_1.txt", "./outputs/plots/exp_1.jpg", width=15, height=8)
+plot_exp_results( "./outputs/tables/exp_propio.txt", "./outputs/plots/exp_propio.jpg", width=15, height=8)

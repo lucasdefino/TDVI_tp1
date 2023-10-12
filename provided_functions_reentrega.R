@@ -74,7 +74,7 @@ load_df <- function(filepath, dataset_name, var_to_predict) {
 preprocess_data <- function(var_to_predict, train_df, val_df,
                             prop_NAs, impute_NAs, treat_NAs_as_new_levels,
                             do_ohe, discretize, n_bins, ord_to_numeric,
-                            prop_switch_y) {
+                            prop_switch_y,prop_noise_x,q_noisy_var,dataset_actual) {
 
   # Add a obs id value to both datasets
   if ("obs_id_value" %in% colnames(train_df)) {
@@ -89,6 +89,37 @@ preprocess_data <- function(var_to_predict, train_df, val_df,
   X_val <- val_df[, setdiff(colnames(train_df), var_to_predict)]
   y_val <- val_df[, c("obs_id_value", var_to_predict)]
   rm(train_df, val_df)
+  
+  if (prop_noise_x > 0) {
+    num_rows_to_add_noise <- ceiling(nrow(X_train) * prop_noise_x)
+    noise_level <- 0.2
+    if (dataset_actual == "CO2"){
+      df <- read.csv("./data/CO2_Emissions_Transformado.csv")
+      tree <- rpart(CO2.Emissions.gt.200gkm~., data = df, control=rpart.control(minsplit=2, minbucket=1, maxdepth=10, cp=0, xval=0))
+      importance_scores <- tree$variable.importance
+      top_variables <- names(importance_scores[order(-importance_scores)])[1:q_noisy_var]
+    }
+    for (var_name in top_variables) {
+      if (is.numeric(X_train[[var_name]])) {
+        noise <- rnorm(num_rows_to_add_noise, mean = 0, sd = noise_level * sd(X_train[[var_name]]))
+        X_train[sample(nrow(X_train), num_rows_to_add_noise), var_name] <- X_train[sample(nrow(X_train), num_rows_to_add_noise), var_name] + noise
+      } else {
+        var_to_switch <- var_name
+        
+        unique_levels <- unique(X_train[[var_to_switch]])
+        
+        for (i in seq_len(num_rows_to_add_noise)) {
+          random_row <- sample(seq_len(nrow(X_train)), 1)
+          
+          current_value <- X_train[random_row, var_to_switch]
+          
+          replacement_value <- sample(setdiff(unique_levels, current_value), 1)
+          
+          X_train[random_row, var_to_switch] <- replacement_value
+        }
+      }
+    }    
+  }
 
   # Generating missing values in the data if specified
   if (prop_NAs > 0) {
@@ -175,16 +206,6 @@ preprocess_data <- function(var_to_predict, train_df, val_df,
     switched_val <- factor(sapply(y_numeric_new, function(x) class_levels[x]), levels=class_levels)
     y_train[to_switch, var_to_predict] <- switched_val[to_switch]
   }
-  
-  
-  if (prop_noise_x > 0) {
-    noise_level <- 0.1
-    var_to_add_noise <-"Cylinders"
-    num_rows_to_add_noise <- ceiling(nrow(X_train) * prop_noise_x)
-    noise <- rnorm(num_rows_to_add_noise, mean = 0, sd = noise_level * sd(X_train[[var_name]]))
-    X_train[sample(nrow(X_train), num_rows_to_add_noise), var_name] <- X_train[sample(nrow(X_train), num_rows_to_add_noise), var_name] + noise
-  }
-  
 
   # Combining the target variable back to the data frames
   X_train <- merge(X_train, y_train, by="obs_id_value")
@@ -221,7 +242,6 @@ preprocess_data <- function(var_to_predict, train_df, val_df,
 #' 5. Combine the AUC results into a single data frame.
 #'
 rep_val_estimate <- function(var_to_predict, tree_control, data_df, prop_val, reps, preprocess_control) {
-
   # Initialize a list to store AUC values for each repetition
   exp_aucs <- list()
 
@@ -247,18 +267,10 @@ rep_val_estimate <- function(var_to_predict, tree_control, data_df, prop_val, re
                                      preprocess_control$discretize,
                                      preprocess_control$n_bins,
                                      preprocess_control$ord_to_numeric,
-                                     preprocess_control$prop_switch_y)
-    
-    differences <- train_df != train_df_anterior
-    
-    # Check if there are any TRUE values in the differences matrix
-    any_differences <- any(differences)
-    
-    if (any_differences) {
-      cat("Noise has been added to the dataset.\n")
-    } else {
-      cat("No differences found. Noise may not have been added successfully.\n")
-    }
+                                     preprocess_control$prop_switch_y,
+                                     preprocess_control$prop_noise_x,
+                                     preprocess_control$q_noisy_var,
+                                     preprocess_control$dataset_actual)
 
     # Fit decision tree and predict on the validation set
     trained_tree <- rpart(as.formula(paste(var_to_predict, " ~ .")),
@@ -338,7 +350,7 @@ est_auc_across_depths <- function(data_to_pred, preprocess_control, max_maxdepth
                                   maxdepth=md,
                                   xval=0,
                                   cp=0)
-
+    print("hola")
     # Estimate AUC for the current tree depth
     auc_tmp <- rep_val_estimate(var_to_predict, tree_control, data_df,
                                 prop_val, val_reps, preprocess_control)
